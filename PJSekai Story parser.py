@@ -1,5 +1,7 @@
-from enum import Enum
 import json
+import os
+from enum import Enum
+from tkinter import filedialog as fd
 
 class SnippetAction(int, Enum):
     NoAction = 0,
@@ -66,11 +68,9 @@ Dict_JP_EN_Location = {
     "絵画教室": "Painting Class"
 }
 
-Folder_Name = r""
-Story_Name = r""
-Story_Count = 8
 bInJapanese = False
-bIsCharacterStory = False
+
+filelist = fd.askopenfilenames(title="Select File(s)")
 
 def ScenarioParser(Scenario_FileName, Scenario_Output_FileName): 
     Scenario_JSON = json.load(open(Scenario_FileName, encoding='utf-8'))
@@ -100,10 +100,9 @@ def VirtualLiveParser(VirtualLive_FileName, VirtualLive_Output_FileName):
         TalkData = TalkEvent["Serif"].replace('\n',' ')
         Virtual_Output_TextFile.write(TalkData + '\n')
 
-for i in range(Story_Count):
-    Scenario_Name = Story_Name + "{:02d}".format(i + 1) if bIsCharacterStory else "_{:02d}".format(i + 1)
-    Scenario_FileName = Folder_Name + Scenario_Name + ".json"
-    Scenario_Output_FileName = Folder_Name + Scenario_Name + ".txt"
+for file in filelist:
+    Scenario_FileName = file
+    Scenario_Output_FileName = os.path.splitext(file)[0] + ".txt"
     ScenarioParser(Scenario_FileName, Scenario_Output_FileName)
 
 #VirtualLiveParser(Filename, output)
